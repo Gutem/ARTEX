@@ -472,8 +472,9 @@ test("pt-BR: locale reconhecido e catalogo com fallback", () => {
   assert.equal(pt["auth.login"], "Entrar");
   assert.equal(pt["nav.dashboard"], "Painel");
   // chave ainda nao traduzida cai no ingles, nunca no chines
-  const untranslated = Object.keys(en).filter((k) => k.startsWith("screen."));
-  assert.ok(untranslated.length > 0);
+  const translated = Object.keys(loadSource("pt-br-screens.json").default);
+  const untranslated = Object.keys(en).filter((k) => k.startsWith("screen.") && !translated.includes(k));
+  assert.ok(untranslated.length > 0, "espera ao menos uma chave screen ainda nao traduzida");
   assert.equal(pt[untranslated[0]], en[untranslated[0]]);
   assert.ok(!/[\u4e00-\u9fff]/.test(pt["nav.settings"]));
 });
