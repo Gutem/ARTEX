@@ -7,7 +7,8 @@ import { scheduleMessages } from "./schedule-messages";
 import screenCatalog from "./screen-catalog.json";
 import { settingsMessages } from "./settings-messages";
 import { settingsRuntimeMessages } from "./settings-runtime-messages";
-import { ptBrChat, ptBrErrors, ptBrMessages, ptBrOverview, ptBrTerms } from "./pt-br";
+import { ptBrChat, ptBrErrors, ptBrMessages, ptBrOverview, ptBrTasks, ptBrTerms } from "./pt-br";
+import { ptBrSettings } from "./pt-br-settings";
 import { taskMessages } from "./task-messages";
 import { termsMessages } from "./terms";
 
@@ -296,7 +297,7 @@ export const resources = {
   // pt-BR herda o inglês e sobrescreve o que já foi traduzido: chave nova no
   // upstream aparece em inglês em vez de sumir.
   "pt-BR": {
-    translation: { ...enTranslation, ...ptBrMessages, ...ptBrOverview, ...ptBrChat, ...ptBrErrors, ...ptBrTerms },
+    translation: { ...enTranslation, ...ptBrMessages, ...ptBrOverview, ...ptBrChat, ...ptBrTasks, ...ptBrSettings, ...ptBrErrors, ...ptBrTerms },
   },
 };
 

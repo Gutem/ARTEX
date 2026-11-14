@@ -480,7 +480,8 @@ test("pt-BR: locale reconhecido e catalogo com fallback", () => {
 
 test("pt-BR: nenhuma chave traduzida ficou de fora do catalogo", () => {
   const { messages } = loadSource("messages.ts");
-  const ptKeys = Object.keys(loadSource("pt-br.ts").ptBrMessages);
-  const missing = ptKeys.filter((k) => !(k in messages));
+  const ptKeys = { ...loadSource("pt-br.ts").ptBrMessages, ...loadSource("pt-br-settings.ts").ptBrSettings };
+  const missing = Object.keys(ptKeys).filter((k) => !(k in messages));
   assert.deepEqual(missing, []);
+  assert.equal(ptKeys["settings.title"], "Configurações do sistema");
 });
