@@ -389,6 +389,8 @@ export const ptBrErrors: Record<string, string> = {
 export const ptBrTerms: Record<string, string> = {
   "terms.title": "Termos de Uso e Isenção de Responsabilidade do ARTEX",
   "terms.version": "Versão v1.0 · Vigente desde 18 de setembro de 2026 · Leia todos os termos antes de entrar",
+  "terms.introduction":
+    "Estes Termos de Uso e Isenção de Responsabilidade (a “Declaração”) constituem um acordo entre você e os autores e contribuidores do ARTEX a respeito do uso deste software. Leia e entenda todas as disposições com atenção, especialmente as isenções, limitações de responsabilidade e restrições destacadas em negrito ou em blocos coloridos.",
   "terms.acceptance":
     "Ao baixar, instalar, acessar ou usar este software de qualquer forma, você declara que leu, entendeu e concorda em ficar vinculado a esta Declaração em sua totalidade.",
   "terms.licenseTitle": "Artigo 1 · Definições e licença de código aberto",
@@ -420,6 +422,8 @@ export const ptBrTerms: Record<string, string> = {
   "terms.responsibility":
     "Você, sozinho, assume toda a responsabilidade legal e as consequências decorrentes da violação dessas leis, regulamentos ou desta Declaração. Os autores e contribuidores do software não respondem por tais violações.",
   "terms.disclaimerTitle": "Artigo 7 · Isenção e limitação de responsabilidade",
+  "terms.disclaimer":
+    "Este software é fornecido “NO ESTADO EM QUE SE ENCONTRA” (AS IS) e “CONFORME DISPONÍVEL” (AS AVAILABLE), sem qualquer garantia expressa ou implícita, incluindo garantias de comercialização, adequação a um fim específico, exatidão ou não violação de direitos. Na máxima extensão permitida pela lei aplicável, os autores e contribuidores não respondem por qualquer perda direta, indireta, incidental, especial ou consequente decorrente do uso ou da impossibilidade de uso deste software, seja o uso adequado ou não, incluindo perda de dados, dano ao sistema, interrupção de negócios, lucros cessantes ou disputas legais.",
   "terms.changesTitle": "Artigo 8 · Alterações e interpretação",
   "terms.changes":
     "Os autores podem atualizar esta Declaração periodicamente para refletir exigências legais ou o desenvolvimento do projeto. Versões atualizadas serão distribuídas com o projeto e passam a valer na publicação. O uso continuado constitui aceitação dos termos revisados. Na extensão permitida por lei, os autores do projeto reservam-se o direito final de interpretar esta Declaração. Se alguma disposição for considerada inválida, as demais permanecem em vigor.",

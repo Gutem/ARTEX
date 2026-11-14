@@ -12,6 +12,7 @@ import ptBrScreens from "./pt-br-screens.json";
 import { ptBrNotify } from "./pt-br-notify";
 import { ptBrSchedule } from "./pt-br-schedule";
 import { ptBrSettings } from "./pt-br-settings";
+import { ptBrMisc, ptBrTasksExtra } from "./pt-br-tasks-extra";
 import { taskMessages } from "./task-messages";
 import { termsMessages } from "./terms";
 
@@ -300,7 +301,7 @@ export const resources = {
   // pt-BR herda o inglês e sobrescreve o que já foi traduzido: chave nova no
   // upstream aparece em inglês em vez de sumir.
   "pt-BR": {
-    translation: { ...enTranslation, ...ptBrMessages, ...ptBrOverview, ...ptBrChat, ...ptBrTasks, ...ptBrSettings, ...ptBrSchedule, ...ptBrNotify,
+    translation: { ...enTranslation, ...ptBrMessages, ...ptBrOverview, ...ptBrChat, ...ptBrTasks, ...ptBrTasksExtra, ...ptBrMisc, ...ptBrSettings, ...ptBrSchedule, ...ptBrNotify,
     ...(ptBrScreens as Record<string, string>), ...ptBrErrors, ...ptBrTerms },
   },
 };
