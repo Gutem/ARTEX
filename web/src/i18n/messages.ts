@@ -7,7 +7,7 @@ import { scheduleMessages } from "./schedule-messages";
 import screenCatalog from "./screen-catalog.json";
 import { settingsMessages } from "./settings-messages";
 import { settingsRuntimeMessages } from "./settings-runtime-messages";
-import { ptBrMessages } from "./pt-br";
+import { ptBrChat, ptBrErrors, ptBrMessages, ptBrOverview, ptBrTerms } from "./pt-br";
 import { taskMessages } from "./task-messages";
 import { termsMessages } from "./terms";
 
@@ -295,7 +295,9 @@ export const resources = {
   en: { translation: enTranslation },
   // pt-BR herda o inglês e sobrescreve o que já foi traduzido: chave nova no
   // upstream aparece em inglês em vez de sumir.
-  "pt-BR": { translation: { ...enTranslation, ...ptBrMessages } },
+  "pt-BR": {
+    translation: { ...enTranslation, ...ptBrMessages, ...ptBrOverview, ...ptBrChat, ...ptBrErrors, ...ptBrTerms },
+  },
 };
 
 for (const [domain, entries] of Object.entries(statuses)) {
