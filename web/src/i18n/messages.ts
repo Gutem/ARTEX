@@ -7,6 +7,7 @@ import { scheduleMessages } from "./schedule-messages";
 import screenCatalog from "./screen-catalog.json";
 import { settingsMessages } from "./settings-messages";
 import { settingsRuntimeMessages } from "./settings-runtime-messages";
+import { ptBrMessages } from "./pt-br";
 import { taskMessages } from "./task-messages";
 import { termsMessages } from "./terms";
 
@@ -287,14 +288,20 @@ const statuses: Record<string, readonly (readonly [string, string, string])[]> =
   ],
 };
 
+const enTranslation = Object.fromEntries(Object.entries(messages).map(([key, pair]) => [key, pair[1]]));
+
 export const resources = {
   "zh-CN": { translation: Object.fromEntries(Object.entries(messages).map(([key, pair]) => [key, pair[0]])) },
-  en: { translation: Object.fromEntries(Object.entries(messages).map(([key, pair]) => [key, pair[1]])) },
+  en: { translation: enTranslation },
+  // pt-BR herda o inglês e sobrescreve o que já foi traduzido: chave nova no
+  // upstream aparece em inglês em vez de sumir.
+  "pt-BR": { translation: { ...enTranslation, ...ptBrMessages } },
 };
 
 for (const [domain, entries] of Object.entries(statuses)) {
   for (const [value, zh, en] of entries) {
     resources["zh-CN"].translation[`status.${domain}.${value}`] = zh;
     resources.en.translation[`status.${domain}.${value}`] = en;
+    resources["pt-BR"].translation[`status.${domain}.${value}`] = resources["pt-BR"].translation[`status.${domain}.${value}`] ?? en;
   }
 }

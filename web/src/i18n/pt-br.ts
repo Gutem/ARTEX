@@ -1,0 +1,178 @@
+/**
+ * Tradução pt-BR do console.
+ *
+ * Só as chaves traduzidas entram aqui; o resto cai no inglês (ver `resources`
+ * em `messages.ts`). Isso mantém a tradução incremental e permite acompanhar o
+ * upstream sem reescrever o catálogo inteiro a cada release.
+ */
+export const ptBrMessages: Record<string, string> = {
+  // comum
+  "common.cancel": "Cancelar",
+  "common.retry": "Tentar novamente",
+  "common.close": "Fechar",
+  "common.loading": "Carregando…",
+  "common.search": "Buscar",
+  "common.all": "Todos",
+  "common.other": "Outro",
+  "common.previous": "Página anterior",
+  "common.next": "Próxima página",
+  "common.version": "Versão",
+
+  // meta e idioma
+  "meta.title": "ARTEX — Console de Pentest Autônomo",
+  "meta.description": "Console de pentest autônomo movido a LLM",
+  "language.label": "Idioma",
+  "language.change": "Trocar idioma",
+
+  // navegação
+  "nav.features": "Recursos",
+  "nav.system": "Sistema",
+  "nav.dashboard": "Painel",
+  "nav.chat": "Chat",
+  "nav.tasks": "Tarefas",
+  "nav.schedules": "Agendamentos",
+  "nav.findings": "Achados",
+  "nav.traffic": "Tráfego",
+  "nav.repeater": "Repeater",
+  "nav.commands": "Execuções de ferramentas",
+  "nav.assets": "Ativos",
+  "nav.sync": "Sincronização de ativos",
+  "nav.workspace": "Área de trabalho",
+  "nav.llm": "LLM",
+  "nav.agents": "Agentes",
+  "nav.mcp": "MCP",
+  "nav.skills": "Habilidades",
+  "nav.tools": "Ferramentas",
+  "nav.notify": "Notificações",
+  "nav.intercept": "Regras de interceptação",
+  "nav.approvals": "Histórico de aprovações",
+  "nav.logs": "Logs",
+  "nav.settings": "Configurações",
+
+  // busca
+  "search.placeholder": "Buscar páginas e recursos…",
+  "search.empty": "Nenhum resultado encontrado",
+
+  // conta
+  "account.changePassword": "Alterar senha",
+  "account.logout": "Sair",
+  "account.currentPassword": "Senha atual",
+  "account.newPassword": "Nova senha",
+  "account.confirmNewPassword": "Confirmar nova senha",
+  "account.passwordRequired": "Informe a senha atual e a nova",
+  "account.passwordMismatch": "As novas senhas não coincidem",
+  "account.passwordChanged": "Senha alterada",
+  "account.changing": "Alterando…",
+  "account.confirmChange": "Confirmar alteração",
+  "account.usernameFixed": "O usuário é",
+  "account.tokenNotice":
+    ". Informe sua senha atual para confirmar sua identidade. Os tokens de acesso existentes continuam válidos até expirarem.",
+  "account.changeFailed": "Não foi possível alterar a senha: {{message}}",
+
+  // autenticação
+  "auth.backendUnavailable": "Não foi possível conectar ao serviço de backend",
+  "auth.agreementRequired": "Leia e aceite os Termos de Uso primeiro",
+  "auth.invalidCredentials": "Usuário ou senha incorretos",
+  "auth.checking": "Verificando o status do login…",
+  "auth.login": "Entrar",
+  "auth.welcome": "Bem-vindo de volta. Informe sua senha para continuar usando o ARTEX.",
+  "auth.username": "Usuário",
+  "auth.password": "Senha",
+  "auth.enterPassword": "Informe sua senha",
+  "auth.agreePrefix": "Li e aceito os",
+  "auth.termsLink": "Termos de Uso",
+  "auth.signingIn": "Entrando…",
+  "auth.passwordMismatch": "As senhas não coincidem",
+  "auth.passwordMin": "Use pelo menos 8 caracteres",
+  "auth.initFailed": "Falha na configuração inicial",
+  "auth.statusUnknown": "Não foi possível determinar o status da configuração",
+  "auth.initPassword": "Defina sua senha",
+  "auth.setupUnavailable":
+    "O backend ou o banco de dados está temporariamente indisponível. A configuração inicial fica bloqueada para proteger a senha existente. Restabeleça o serviço e tente de novo.",
+  "auth.setupWelcome": "Bem-vindo ao ARTEX. Defina uma senha de acesso com pelo menos 8 caracteres.",
+  "auth.minPlaceholder": "Pelo menos 8 caracteres",
+  "auth.confirmPassword": "Confirmar senha",
+  "auth.reenterPassword": "Digite a senha novamente",
+  "auth.saving": "Salvando…",
+  "auth.setupAndLogin": "Definir senha e entrar",
+
+  // menções
+  "mention.finding": "Achado",
+  "mention.asset": "Ativo",
+  "mention.company": "Empresa",
+  "mention.endpoint": "Endpoint",
+  "mention.ip": "IP",
+  "mention.app": "Aplicação",
+  "mention.root_domain": "Domínio raiz",
+  "mention.subdomain": "Subdomínio",
+
+  // data
+  "date.select": "Selecionar data",
+  "date.clear": "Limpar data",
+  "date.placeholder": "Ano / Mês / Dia",
+  "date.unboundedStart": "Sem data inicial",
+  "date.unboundedEnd": "Sem data final",
+  "date.filter": "Filtro de data",
+  "date.filterLabel": "Filtrar por data",
+  "date.filterTitle": "Filtrar por hora de descoberta",
+  "date.filterHelp": "Escolha datas e horários. Os dois extremos estão incluídos.",
+  "date.startTime": "Hora inicial",
+  "date.endTime": "Hora final",
+  "date.startDate": "Data inicial",
+  "date.endDate": "Data final",
+  "date.startHourMinute": "Hora inicial",
+  "date.endHourMinute": "Hora final",
+  "date.clearFilter": "Limpar filtro de data",
+
+  // hora
+  "time.select": "Selecionar hora",
+  "time.hour": "Hora",
+  "time.minute": "Minuto",
+  "time.hourLabel": "Hora de {{label}}",
+  "time.minuteLabel": "Minuto de {{label}}",
+  "time.clearEnd": "Limpar hora final",
+  "time.noEnd": "Sem hora final",
+  "clock.current": "Hora atual",
+  "clock.local": "Hora local atual",
+
+  // tema
+  "theme.light": "Claro",
+  "theme.dark": "Escuro",
+  "theme.system": "Sistema",
+  "theme.cycle": "Tema atual: {{theme}}. Clique para alternar.",
+
+  // layout
+  "layout.preferences": "Preferências",
+  "layout.description": "Personalize o layout e a aparência do console.",
+  "layout.preset": "Predefinição de tema",
+  "layout.fonts": "Fontes",
+  "layout.selectFont": "Selecionar fonte",
+  "layout.themeMode": "Modo do tema",
+  "layout.pageLayout": "Layout da página",
+  "layout.centered": "Centralizado",
+  "layout.fullWidth": "Largura total",
+  "layout.navbar": "Comportamento da barra de navegação",
+  "layout.sticky": "Fixa",
+  "layout.scroll": "Rolagem",
+  "layout.sidebarStyle": "Estilo da barra lateral",
+  "layout.inset": "Embutida",
+  "layout.sidebar": "Barra lateral",
+  "layout.floating": "Flutuante",
+  "layout.collapse": "Modo de recolhimento da barra lateral",
+  "layout.icon": "Ícones",
+  "layout.offcanvas": "Fora da tela",
+  "layout.restore": "Restaurar padrões",
+
+  // interface
+  "ui.previousSlide": "Slide anterior",
+  "ui.nextSlide": "Próximo slide",
+  "ui.mobileSidebar": "Barra lateral móvel",
+  "ui.toggleSidebar": "Alternar barra lateral",
+  "ui.morePages": "Mais páginas",
+  "ui.commandTitle": "Buscar páginas e recursos",
+  "ui.commandDescription": "Digite uma palavra-chave para buscar páginas e recursos disponíveis.",
+  "ui.sortDescending": "Ordenar {{label}} em ordem decrescente",
+  "ui.sortActive": "{{label}} está ordenado em ordem {{direction}}. Clique para inverter.",
+  "ui.ascending": "crescente",
+  "ui.descending": "decrescente",
+};

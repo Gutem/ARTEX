@@ -457,3 +457,30 @@ test("task runtime validation preserves unknown details and schedule validation 
   assert.equal(taskError(new Error("备注最多 200 个字符"), translate), "备注最多 200 个字符");
   assert.equal(translate("taskUI.phase.snapshot_database"), "创建数据库快照");
 });
+
+test("pt-BR: locale reconhecido e catalogo com fallback", () => {
+  const { resolveLocale, SUPPORTED_LOCALES } = loadSource("config.ts");
+  assert.ok(SUPPORTED_LOCALES.includes("pt-BR"));
+  assert.equal(resolveLocale("pt-BR"), "pt-BR");
+  assert.equal(resolveLocale("pt"), "pt-BR");
+  assert.equal(resolveLocale("pt_PT"), "pt-BR");
+
+  const { resources } = loadSource("messages.ts");
+  const pt = resources["pt-BR"].translation;
+  const en = resources.en.translation;
+  assert.equal(pt["nav.findings"], "Achados");
+  assert.equal(pt["auth.login"], "Entrar");
+  assert.equal(pt["nav.dashboard"], "Painel");
+  // chave ainda nao traduzida cai no ingles, nunca no chines
+  const untranslated = Object.keys(en).filter((k) => k.startsWith("screen."));
+  assert.ok(untranslated.length > 0);
+  assert.equal(pt[untranslated[0]], en[untranslated[0]]);
+  assert.ok(!/[\u4e00-\u9fff]/.test(pt["nav.settings"]));
+});
+
+test("pt-BR: nenhuma chave traduzida ficou de fora do catalogo", () => {
+  const { messages } = loadSource("messages.ts");
+  const ptKeys = Object.keys(loadSource("pt-br.ts").ptBrMessages);
+  const missing = ptKeys.filter((k) => !(k in messages));
+  assert.deepEqual(missing, []);
+});
