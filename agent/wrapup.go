@@ -41,11 +41,11 @@ var wrapupTurnDefaults = map[string]int{
 
 const genericWrapupTurns = 10
 
-const plannerWrapUpDefault = "你本轮规划的步数即将用尽——注意只是【这一轮】结束,系统之后仍会随态势变化再次唤醒你继续规划,并非任务终止,你无需在此收束整个规划。请把本轮已经想清楚的结论落地、别让这一轮白跑,但也【不要为了收尾硬凑意图】(本轮 0 个意图仍是完全正常的结果)：(1) 若已判断出【当前就该派发】的探索方向,用一次 add_intent 批量提交(想好的别憋着不发);(2) 对已被某发现/事实证明达成的目标,调 prove_goal 标记 met(别漏判);(3) 若识别出需要分步的串行利用链,用 TodoWrite 记下,便于下次唤醒接着派。做完直接结束本轮,无需输出总结文本。"
+const plannerWrapUpDefault = "The step budget for this planning round is running out — note that only THIS ROUND ends; the system will wake you again as the situation changes, so this is not the end of the task and you do not need to converge the whole plan here. Land what you have already thought through so the round is not wasted, but do NOT pad intents just to wrap up (0 intents this round is still a perfectly normal outcome): (1) if you have identified an exploration direction that should be dispatched NOW, submit it in one batch add_intent call (do not hold it back); (2) for an objective already proven by a finding or fact, call prove_goal to mark it met (do not miss one); (3) if you identified a sequential exploit chain that needs steps, record it with TodoWrite so the next wake-up can continue. Then end the round; no summary text is needed."
 
-const mainAgentWrapUpDefault = "你的步数即将用尽,本次交互就要结束。不要再发起新的探索/操作。请**单独用一句话纯文本**向用户总结当前进展、关键结论,以及建议的下一步。"
+const mainAgentWrapUpDefault = "Your step budget is nearly exhausted and this interaction is about to end. Do not start any new exploration or action. Reply with **a single plain-text sentence** summarizing the current progress, the key conclusions and the suggested next step."
 
-const genericWrapUpDefault = "你即将因预算耗尽被终止。请先把已完成但未落库的结果写回,再**单独用一句话纯文本**总结你做了什么、得到哪些关键结论(这句会作为本次运行的结果展示)。"
+const genericWrapUpDefault = "You are about to be terminated because the budget is exhausted. First write back any result you completed but never recorded, then summarize **in a single plain-text sentence** what you did and which key conclusions you reached (that sentence is shown as the result of this run)."
 
 // WrapupDefault returns the built-in default wrap-up prompt for an agent key —
 // used by the admin UI as the "restore default" value and empty-field placeholder.

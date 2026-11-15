@@ -496,7 +496,7 @@ func TestConnection(ctx context.Context, c Config) (time.Duration, string, error
 	// EscalateMaxTokens 保持 false:不因截断而抬额重试,避免 resume 循环空烧。
 	reply, err := agentcore.Run(ctx, agentcore.Options{
 		Provider:       prov,
-		SystemPrompt:   []string{"你是连接测试。直接输出两个字符 OK 即可，不要思考、不要解释、不要别的。"},
+		SystemPrompt:   []string{"You are a connectivity test. Output exactly the two characters OK. Do not think, do not explain, nothing else."},
 		PermissionMode: acperm.ModeBypass,
 		MaxTurns:       1,
 		MaxTokens:      8192,

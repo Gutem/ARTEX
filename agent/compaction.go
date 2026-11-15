@@ -530,19 +530,19 @@ func (c *Compactor) compress(ctx context.Context, g *coldGraph, b block, nodeByI
 }
 
 // compressionSystemPrompt is the §4 body prompt.
-const compressionSystemPrompt = `你在压缩一组【彼此关联】的探索节点，产出一段综合结论(body)，供规划者快速掌握"这一片已经探明了什么"。
+const compressionSystemPrompt = `You are compressing a set of RELATED exploration nodes into one synthesized conclusion (body), so the planner can quickly grasp "what this stretch has already established".
 
-输入是一个连通子图：
-- 节点：每条是一个意图或事实的 summary（一句话），带 id、类型(intent/fact)、state、confidence(若有)。
-- 关系：节点之间的血缘边（A 派生自 B / A 产出 B），说明它们如何串联。
-- 若节点间没有直接血缘边、但同属一个上游意图（会另给出该上游意图作为"共同父 #p"），则按"这个意图（#p）探到了什么"来综合它们——共同父只是上下文锚、不是要压缩的成员。
+The input is one connected subgraph:
+- Nodes: each is the summary of an intent or a fact (one sentence), with id, type (intent/fact), state, and confidence when present.
+- Relations: the lineage edges between nodes (A derives from B / A yields B), showing how they chain.
+- If the nodes have no direct lineage edge but share one upstream intent (given separately as "common parent #p"), synthesize them as "what this intent (#p) found out" — the common parent is only a context anchor, not a member to compress.
 
-据此写一段 body：
-1. 综合、不罗列：顺着关系把因果串起来（哪个事实催生哪个意图、哪条意图产出了哪个结论），讲成"这一片探索得出了什么"，不要把每条 summary 抄一遍。
-2. 保留区分度：彼此不同的结论分别说清，别揉成一句笼统的话。
-3. 保留证据强度：带 confidence 的结论标出 observed / inferred；inferred 的否定/存疑结论要点明它只是推断、可复核，别写成定论。
-4. 带上 id：每条结论后标注来源节点 id（如"…（#12,#28）"），让规划者能按 id 还原原节点。
-5. 正向陈述、只写输入里有的：不脑补、不引入输入中没有的判断。
-6. 长度随内容自适应：结论少就短，多且互不相同就写够——但整体显著短于所有输入 summary 的总和。
+Write one body from that:
+1. Synthesize, do not enumerate: follow the relations and chain the causality (which fact motivated which intent, which intent produced which conclusion), telling "what this stretch of exploration established". Do not copy each summary over.
+2. Keep the distinctions: conclusions that differ from each other must each be stated clearly; do not blur them into one generic sentence.
+3. Keep the strength of the evidence: mark conclusions carrying confidence as observed or inferred; an inferred negative or doubtful conclusion must be pointed out as inference and open to re-checking, never stated as settled.
+4. Carry the ids: after each conclusion, note the source node ids (for example "(#12,#28)") so the planner can resolve the original nodes by id.
+5. State positively and only what the input contains: do not fill gaps and do not introduce judgments absent from the input.
+6. Let the length follow the content: short when there are few conclusions, long enough when there are many that differ — but always clearly shorter than the sum of the input summaries.
 
-只输出 body 正文本身。`
+Output only the body text itself.`

@@ -17,15 +17,15 @@ var PromptOverride func(agentKey string) (string, bool)
 // cannot accidentally remove the operational safety guidance.
 var OpsecEnabled func() bool
 
-const opsecPromptBlock = `【OPSEC 准则（硬约束，仅次于授权范围和任务操作约束）】
+const opsecPromptBlock = `[OPSEC RULES — hard constraints, second only to the authorized scope and to the task's operation constraints]
 
-- 先复用已有流量、浏览器会话和已验证证据；能通过 traffic_search/traffic_get 或浏览器完成时，不要重复直接请求。
-- 所有目标交互必须经过平台配置的记录代理或浏览器工具，确保请求可追溯。
-- 不得使用裸 curl、urllib、requests 等工具的默认请求头直接访问目标。优先复用目标已有流量中的 User-Agent、Accept、Referer、Cookie 等请求特征；平台 HTTP 工具和采集模板的默认 UA 由系统随机策略提供，同一次请求的重定向、重试必须保持一致，明确配置的 UA 优先。
-- 不得使用 -k、--ignore-https-errors、verify=False 等方式绕过证书校验；平台代理 CA 已配置时应正常验证。
-- 不得批量并发、快速循环、无节制重试、端口横扫、目录爆破或大规模扫描；遇到限速、验证码、WAF 或异常响应时立即停止当前方向，不得通过更换 UA 继续当前方向。
-- OPSEC 不扩大授权范围；目标、主机、端口、路径或账号不在授权范围内时不得访问。
-- 请求和响应是否留痕由平台代理和浏览器负责；不要额外复制完整请求头、Cookie 或响应正文。`
+- Reuse existing traffic, browser sessions and already-verified evidence first; when traffic_search/traffic_get or the browser can answer it, do not repeat the request directly.
+- Every interaction with the target must go through the platform-configured recording proxy or the browser tools, so the request stays traceable.
+- Do not use bare curl, urllib, requests or similar with default headers against the target. Prefer reusing the User-Agent, Accept, Referer and Cookie characteristics already present in the target's traffic; the platform HTTP tools and collection templates take their default UA from the system's randomized policy, and redirects and retries inside one request must keep the same UA; an explicitly configured UA takes precedence.
+- Do not use -k, --ignore-https-errors, verify=False or similar to bypass certificate validation; when the platform proxy CA is configured, validate normally.
+- Do not bulk or concurrent request, loop rapidly, retry without limit, sweep ports, brute-force directories or run large-scale scans; on rate limiting, captcha, WAF or an anomalous response, stop the current direction immediately and do not resume it by switching UA.
+- OPSEC does not expand the authorized scope; when the target, host, port, path or account is outside the authorized scope, do not access it.
+- Whether a request and its response are recorded is the platform proxy's and the browser's job; do not additionally copy full request headers, cookies or response bodies.`
 
 // Prompt-variable structs — fields mirror each agent's catalog (docs §5a) so a
 // user template referencing a catalog variable renders; referencing anything else
