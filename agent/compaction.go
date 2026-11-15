@@ -439,6 +439,39 @@ func nodeSummary(n *db.Node) string {
 	return ""
 }
 
+// nodeStopReason returns why an intent stopped, when the payload records it.
+//
+// This is the part of an intent that IS a planner decision: "blocked because the
+// WAF rejects every payload" and "exhausted after the budget" lead to opposite
+// next steps (do not retry vs continue where it stopped). Compressing the intent
+// without it turns the digest into "this was looked at", which is exactly how a
+// planner ends up reopening a dead route or dropping a half-finished one.
+func nodeStopReason(n *db.Node) string {
+	if n == nil || n.Kind != db.KindIntent {
+		return ""
+	}
+	var p map[string]any
+	if json.Unmarshal(n.Payload, &p) != nil {
+		return ""
+	}
+	for _, key := range []string{"reason", "stop_reason", "terminal_reason", "error"} {
+		if v, ok := p[key].(string); ok && strings.TrimSpace(v) != "" {
+			return strings.TrimSpace(v)
+		}
+	}
+	return ""
+}
+
+// clipLine shortens a single-line field so a long stack trace cannot dominate the
+// compression input.
+func clipLine(s string, n int) string {
+	s = strings.Join(strings.Fields(strings.ReplaceAll(s, "\n", " ")), " ")
+	if len(s) <= n {
+		return s
+	}
+	return s[:n] + "…"
+}
+
 func nodeConfidence(n *db.Node) string {
 	if n == nil {
 		return ""
@@ -476,6 +509,9 @@ func buildCompressionInput(g *coldGraph, b block, nodeByID map[int64]*db.Node) s
 		line := fmt.Sprintf("- #%d [%s/%s] %s", m, kind, state, nodeSummary(n))
 		if conf := nodeConfidence(n); conf != "" {
 			line += fmt.Sprintf(" (confidence=%s)", conf)
+		}
+		if reason := nodeStopReason(n); reason != "" {
+			line += fmt.Sprintf(" (stopped because: %s)", clipLine(reason, 200))
 		}
 		sb.WriteString(line)
 		sb.WriteByte('\n')
@@ -541,6 +577,7 @@ Write one body from that:
 1. Synthesize, do not enumerate: follow the relations and chain the causality (which fact motivated which intent, which intent produced which conclusion), telling "what this stretch of exploration established". Do not copy each summary over.
 2. Keep the distinctions: conclusions that differ from each other must each be stated clearly; do not blur them into one generic sentence.
 3. Keep the strength of the evidence: mark conclusions carrying confidence as observed or inferred; an inferred negative or doubtful conclusion must be pointed out as inference and open to re-checking, never stated as settled.
+3b. Preserve WHY a direction stopped. When a member carries "stopped because", keep that reason in the conclusion and never flatten it into "this was explored": "blocked" (won, do not retry without a new mechanism), "exhausted" (ran out mid-way, safe to continue) and "stopped" (deliberately killed) drive opposite next steps, and losing the distinction is how a planner reopens a dead route or abandons a half-finished one.
 4. Carry the ids: after each conclusion, note the source node ids (for example "(#12,#28)") so the planner can resolve the original nodes by id.
 5. State positively and only what the input contains: do not fill gaps and do not introduce judgments absent from the input.
 6. Let the length follow the content: short when there are few conclusions, long enough when there are many that differ — but always clearly shorter than the sum of the input summaries.
