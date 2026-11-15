@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/Autumn-27/artex/db"
+	"github.com/Autumn-27/artex/internal/oast"
 	acperm "github.com/Autumn-27/norma/permission"
 	actool "github.com/Autumn-27/norma/tool"
 )
@@ -107,6 +109,22 @@ type ToolSet struct {
 	// the planner having to spot it folded into the graph overview. Wired for the main
 	// agent + cross-task orchestration; nil elsewhere → falls back to the bare notify.
 	notifyHint func(texts []string)
+
+	// oast is the out-of-band callback channel. nil = the oast_* tools are not
+	// offered at all, so an installation without the channel pays no prompt tokens.
+	oast *oast.Server
+	// oastProbes remembers each minted token with the note the agent attached, so
+	// oast_hits can say what a callback was for. Guarded by oastMu.
+	oastMu     sync.RWMutex
+	oastProbes map[string]oastProbe
+
+	// Native HTTP tools. httpProxy is a provider because the egress proxy can
+	// change between runs; httpCACert is the recording MITM CA, added to the trust
+	// pool so certificate validation stays on instead of being skipped.
+	httpProxy    func() string
+	httpCACert   string
+	httpMu       sync.Mutex
+	httpSessions map[string]*httpSession
 }
 
 // SetNotifyGoal wires the goal-add trigger callback (see ToolSet.notifyGoal). Set only
@@ -274,6 +292,9 @@ func obj(props map[string]any, required ...string) map[string]any {
 	return m
 }
 func str(desc string) map[string]any { return map[string]any{"type": "string", "description": desc} }
+func boolp(desc string) map[string]any {
+	return map[string]any{"type": "boolean", "description": desc}
+}
 func intp(desc string) map[string]any {
 	return map[string]any{"type": "integer", "description": desc}
 }
