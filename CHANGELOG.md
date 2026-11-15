@@ -179,6 +179,9 @@ idioma — nós (prompts/tools para inglês), `felipemlopes` (dicionário pt-BR 
   responder em português, é uma linha em cada prompt de papel.
 - **OAST exige endereço público**: `PublicBase` deve ser o endereço que o **alvo**
   alcança; sem ele o token aponta para o listen local, o que só serve a teste.
+  A validação ponta a ponta (alvo externo chamando de volta, DNS delegado) fica
+  para a VPS: exige porta liberada no security group, `PublicBase` no IP/domínio
+  público e, para o canal DNS, `oast.<domínio>` delegado na porta 53.
 - **Gate de conformidade é literal**: constraint em prosa sem termo checável não
   é verificada.
 
