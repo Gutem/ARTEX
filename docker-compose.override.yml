@@ -1,0 +1,42 @@
+# Endurecimento local — aplicado por cima do docker-compose.yml do upstream.
+#
+# O `docker compose` carrega este arquivo automaticamente (sem `-f`), então o
+# arquivo do upstream fica intocado e o merge com ele continua barato.
+#
+# Por que cada linha existe (ver `HARDENING.md`):
+#
+#   image por digest     tag flutuante é supply chain sem controle; o upstream
+#                        publica `latest` e o `tomicdd/artex` chegou a sair com
+#                        backdoor de execução não autenticada (nov/2026).
+#   console em loopback  o ARTEX executa shell por design; console publicado na
+#                        rede é RCE para quem alcança a porta.
+#   proxy 8788 fechado   ele faz MITM do tráfego de teste; expor vaza credencial
+#                        de cliente. Só é útil de dentro do container.
+#   no-new-privileges    impede escalada via setuid dentro do container (que roda
+#                        como root de propósito, para o nmap raw).
+#   chave JWT em volume  sem isso todo `down`/`up` invalida as sessões.
+#   rootfs read-only     o binário não pode ser trocado pelo self-update, que
+#                        aponta para o upstream e sobrescreveria esta build.
+services:
+  artex:
+    # Referência completa numa variável só: o default é o digest auditado do
+    # Registry; para usar uma build local, ARTEX_REF=artex:local.
+    image: ${ARTEX_REF:-ruoji6/artex@sha256:b4848e321d5599f5a5d8de7a28e7e31b694db4281e5f4548d1aa09df59c44e14}
+    ports: !override
+      - "127.0.0.1:8787:8787"
+    environment:
+      ARTEX_KEY_DIR: /app/keys
+      # config.json no diretório de dados, que é gravável, e não ao lado do binário
+      ARTEX_CONFIG: /app/data/config.json
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - ./data:/app/data
+      - ./skills:/app/skills
+      - artex_key:/app/keys
+
+volumes:
+  artex_key:
