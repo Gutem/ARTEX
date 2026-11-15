@@ -212,7 +212,30 @@ func seedPrompts(pg *db.DB) {
 			continue
 		}
 		if err := pg.SeedPromptIfEmpty(a.ID, tmpl); err != nil {
-			log.Printf("[prompts] seed %s 失败: %v", key, err)
+			log.Printf("[prompts] seed %s failed: %v", key, err)
+			continue
+		}
+	}
+	upgradePrompts(pg)
+}
+
+// upgradePrompts migrates a built-in prompt body that was never edited to the
+// current code default. Installation created before a default changed otherwise
+// keep the old text forever, because SeedPromptIfEmpty is first-insert only.
+// An edited prompt fails the hash check and is left alone.
+func upgradePrompts(pg *db.DB) {
+	for _, up := range agent.PromptUpgrades() {
+		a, err := pg.GetAgentByKey(up.Key)
+		if err != nil || a == nil {
+			continue
+		}
+		changed, err := pg.UpgradeDefaultPromptHash(a.ID, up.OldHash, up.Replacement, up.Note)
+		if err != nil {
+			log.Printf("[prompts] upgrade %s failed: %v", up.Key, err)
+			continue
+		}
+		if changed {
+			log.Printf("[prompts] %s upgraded to the current built-in body", up.Key)
 		}
 	}
 }
