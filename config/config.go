@@ -79,6 +79,17 @@ func isGoRunDir(dir string) bool {
 //
 // The first existing file wins. If none exist, the CWD path is returned so the
 // "not found" message points at the project dir the user most likely expected.
+// KeyDir devolve onde a chave de assinatura do JWT é persistida. O padrão é o
+// diretório do executável (BaseDir), que num container é /app — fora de qualquer
+// volume, e portanto perdido a cada recreate. ARTEX_KEY_DIR permite apontar para
+// um volume persistido.
+func KeyDir() string {
+	if v := strings.TrimSpace(os.Getenv("ARTEX_KEY_DIR")); v != "" {
+		return v
+	}
+	return BaseDir()
+}
+
 func Path() string {
 	if v := strings.TrimSpace(os.Getenv("ARTEX_CONFIG")); v != "" {
 		return v

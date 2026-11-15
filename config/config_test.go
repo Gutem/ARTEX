@@ -40,3 +40,24 @@ func TestPostgresDSNPrecedence(t *testing.T) {
 		t.Fatalf("file dsn verbatim, got %q err %v", got, err)
 	}
 }
+
+func TestKeyDirOverride(t *testing.T) {
+	t.Setenv("ARTEX_KEY_DIR", "/var/lib/artex/keys")
+	if got := KeyDir(); got != "/var/lib/artex/keys" {
+		t.Fatalf("KeyDir() = %q, quer /var/lib/artex/keys", got)
+	}
+}
+
+func TestKeyDirFallsBackToBaseDir(t *testing.T) {
+	t.Setenv("ARTEX_KEY_DIR", "")
+	if got, want := KeyDir(), BaseDir(); got != want {
+		t.Fatalf("KeyDir() = %q, quer BaseDir() = %q", got, want)
+	}
+}
+
+func TestKeyDirIgnoresBlank(t *testing.T) {
+	t.Setenv("ARTEX_KEY_DIR", "   ")
+	if got, want := KeyDir(), BaseDir(); got != want {
+		t.Fatalf("KeyDir() com espaço em branco = %q, quer %q", got, want)
+	}
+}

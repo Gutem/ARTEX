@@ -112,7 +112,13 @@ func run() int {
 		skillDir = abs
 	}
 	log.Printf("[config] skill 目录: %s", skillDir)
-	srv := server.New(ctx, mgr, skillDir, *dataDir, config.BaseDir())
+	// A chave de assinatura do JWT mora ao lado do executável por padrão, e no
+	// container esse diretório é /app — fora de qualquer volume. Resultado: todo
+	// `docker compose up` depois de um `down` invalidava as sessões. ARTEX_KEY_DIR
+	// deixa o operador apontar para um volume persistido.
+	keyDir := config.KeyDir()
+	log.Printf("[config] diretório da chave JWT: %s", keyDir)
+	srv := server.New(ctx, mgr, skillDir, *dataDir, keyDir)
 	defer srv.Close()
 	httpSrv := &http.Server{
 		Addr:              *addr,
