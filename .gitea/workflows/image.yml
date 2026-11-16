@@ -1,0 +1,84 @@
+name: image
+# Imagem do ARTEX buildada e publicada no registry do Gitea.
+#
+# Por que existe: o compose endurecido roda com `read_only: true` e
+# `ARTEX_KEY_DIR` — o patch de `config.KeyDir()` só está no nosso fork. A imagem
+# publicada do upstream grava a chave em /app e morre no boot com rootfs
+# read-only. Sem esta pipeline, cada host teria que instalar Go e compilar.
+#
+# O Dockerfile NÃO compila: ele recebe `dist/<arch>/artex` pronto (é o desenho
+# do upstream, para o build multi-arch não emular compilação).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'agent/**'
+      - 'server/**'
+      - 'config/**'
+      - 'cmd/**'
+      - 'db/**'
+      - 'web/**'
+      - 'Dockerfile'
+      - 'build.sh'
+      - '.gitea/workflows/image.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: artex-image
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      REGISTRY: gitnet.teske.zip
+      IMAGE: gitnet.teske.zip/teskeslaborg/artex
+      GITHUB_TOKEN: ${{ secrets.REPO_AUTOMATION_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Frontend estático
+        working-directory: web
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          npm run build:static
+
+      - name: Binário (Go puro, UI embutida)
+        run: |
+          set -euo pipefail
+          rm -rf server/webui/dist
+          cp -r web/out server/webui/dist
+          mkdir -p dist/amd64
+          CGO_ENABLED=0 GOARCH=amd64 go build -tags embedui -o dist/amd64/artex ./cmd/artex
+          file dist/amd64/artex
+          ls -lh dist/amd64/artex
+
+      - name: Login no registry
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.REGISTRY_TOKEN }}" | docker login "$REGISTRY" -u "${REGISTRY_USER:-gutem}" --password-stdin
+
+      - name: Build e push
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_SHA::12}"
+          docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$TAG"
+          docker push "$IMAGE:latest"
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:$TAG")
+          echo "### Imagem publicada" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$DIGEST" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$DIGEST"
